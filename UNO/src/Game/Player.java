@@ -54,5 +54,31 @@ public class Player {
         System.out.println(name + " have drawn a card: " + card.getColor() + " " + card.getValue());
     }
 
-    
+    public void playCard(Card card, WorkingGame game) {
+        inHand.remove(card);
+        game.setCurrentCard(card);
+        System.out.println(name + " played: " + card.getColor() + " " + card.getValue());
+    }
+
+    public boolean hasValidCardToPlay(Card currentCard) {
+        for (Card card : inHand) {
+            if (card.getColor() == currentCard.getColor() || card.getValue() == currentCard.getValue()
+                    || card.isCheckWild() || card.isWildAction()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void applySpecialCardEffect(Card card, WorkingGame game){
+        if(card.getValue()==10){
+            System.out.println("Reversing the direction of play.");
+//            reverse
+        }
+        else if(card.getValue()==11){
+            System.out.println("Next player turn have been skipped");
+//            skip
+        }
+        else if
+    }
 }
