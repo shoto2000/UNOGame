@@ -2,6 +2,7 @@ package Game;
 
 import Game.Card;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
@@ -13,10 +14,10 @@ public class Player {
 
     }
 
-    public Player(int id, String name, List<Card> inHand) {
+    public Player(int id, String name) {
         this.id = id;
         this.name = name;
-        this.inHand = inHand;
+        this.inHand = new ArrayList<>();
     }
 
     public int getId() {
@@ -42,4 +43,16 @@ public class Player {
     public void setInHand(List<Card> inHand) {
         this.inHand = inHand;
     }
+
+    public void receiveInitialCards(List<Card> cards) {
+        inHand.addAll(cards);
+    }
+
+    public void drawCard(Deck deck) {
+        Card card = deck.drawCard();
+        inHand.add(card);
+        System.out.println(name + " have drawn a card: " + card.getColor() + " " + card.getValue());
+    }
+
+    
 }

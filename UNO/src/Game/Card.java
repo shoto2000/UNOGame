@@ -38,14 +38,22 @@ public class Card {
         this.wildAction = wildAction;
     }
 
-    public Card(Color color, int value, boolean checkWild, boolean wildAction) {
+    public Card(Color color, int value) {
         this.color = color;
         this.value = value;
-        this.checkWild = checkWild;
-        this.wildAction = wildAction;
+        this.checkWild = false;
+        this.wildAction = false;
     }
 
     public Card(){
+
+    }
+
+    public boolean isSpecialActionCard(){
+        return !checkWild && (value==10||value==11||value==12);
+    }
+
+    public void actionPerformed(){
 
     }
 }
