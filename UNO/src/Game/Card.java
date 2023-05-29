@@ -3,8 +3,6 @@ package Game;
 public class Card {
     private Color color;
     private int value;
-    private boolean checkWild;
-    private boolean wildAction;
 
     public Color getColor() {
         return color;
@@ -22,27 +20,9 @@ public class Card {
         this.value = value;
     }
 
-    public boolean isCheckWild() {
-        return checkWild;
-    }
-
-    public void setCheckWild(boolean checkWild) {
-        this.checkWild = checkWild;
-    }
-
-    public boolean isWildAction() {
-        return wildAction;
-    }
-
-    public void setWildAction(boolean wildAction) {
-        this.wildAction = wildAction;
-    }
-
     public Card(Color color, int value) {
         this.color = color;
         this.value = value;
-        this.checkWild = false;
-        this.wildAction = false;
     }
 
     public Card(){
@@ -50,10 +30,12 @@ public class Card {
     }
 
     public boolean isSpecialActionCard(){
-        return !checkWild && (value==10||value==11||value==12);
+        return (value==10||value==11||value==12);
     }
 
-    public void actionPerformed(){
-
+    @Override
+    public String toString() {
+        return color +
+                " " + value;
     }
 }

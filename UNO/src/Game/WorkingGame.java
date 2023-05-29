@@ -2,13 +2,14 @@ package Game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class WorkingGame {
     private List<Player> players;
     private Deck deck;
     private List<Card> discarded;
     private int currentPlayerIndex;
-    private boolean direction;
+    private int direction;
     private Card currentCard;
 
     public WorkingGame(List<Player> players) {
@@ -16,7 +17,7 @@ public class WorkingGame {
         this.deck = new Deck();
         this.discarded = new ArrayList<>();
         this.currentPlayerIndex = 0;
-        this.direction = false;
+        this.direction = 1;
     }
 
     private void distributeInitialCards() {
@@ -31,8 +32,10 @@ public class WorkingGame {
 
     public void startGame(){
         deck.initialize();
-        deck.suffle();
+        deck.shuffle();
         distributeInitialCards();
+        System.out.println("Deck has: "+deck.getCards().size()+" cards");
+        System.out.println("Deck has: "+deck.getCards());
         Card initialCard = deck.drawCard();
         discarded.add(initialCard);
         currentCard = initialCard;
@@ -40,9 +43,91 @@ public class WorkingGame {
         System.out.println("Starting the game with: "+ initialCard.getColor()+" "+initialCard.getValue());
     }
 
+    private boolean isValidCardPlay(Card card) {
+        return card.getColor() == currentCard.getColor() || card.getValue() == currentCard.getValue();
+    }
+
     public void turnHandler(Player player){
         System.out.println(player.getName()+"'s turn");
+        System.out.println("Current Card: "+currentCard.getColor()+" "+currentCard.getValue());
+        System.out.println("Players Hand:");
+        for(int i=0;i<player.getInHand().size();i++){
+            System.out.println("index "+i+"= "+player.getInHand().get(i));
+        }
+        if(!player.hasValidCardToPlay(currentCard)){
+            System.out.println("Not a valid card to play, Drawing a Card");
+            player.drawCard(deck);
+            System.out.println("After Drawing Card Players Hand:");
+            for(int i=0;i<player.getInHand().size();i++){
+                System.out.println("index "+i+"= "+player.getInHand().get(i));
+            }
+            if(!player.hasValidCardToPlay(currentCard)){
+                System.out.println("Still no valid card to Play, turn skipped");
+                nextPlayer();
+                return;
+            }
+        }
 
+        Scanner sc = new Scanner(System.in);
+
+        int choice;
+
+        while(true){
+            System.out.println("Enter the index of the card to play between {0-"+ (player.getInHand().size()-1)+"}"+" or -1 to draw te card");
+            choice = sc.nextInt();
+
+            if(choice==-1){
+                player.drawCard(deck);
+                return;
+            }
+            if(choice>=0 && choice<player.getInHand().size()){
+                Card selectedCard = player.getInHand().get(choice);
+                if(isValidCardPlay(selectedCard)){
+                    player.playCard(selectedCard,this);
+                    if(selectedCard.isSpecialActionCard()){
+                        player.applySpecialCardEffect(selectedCard,this);
+                    }
+                    if(player.getInHand().isEmpty()){
+                        System.out.println(player.getName()+" wins the game");
+                        System.exit(0);
+                    }
+                    nextPlayer();
+                    return;
+                }
+                else{
+                    System.out.println("invalid Card selection. Try again");
+                }
+            }
+            else{
+                System.out.println("Invalid Choice. Try Again");
+            }
+        }
+    }
+
+
+    private void nextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + direction) % players.size();
+        if (currentPlayerIndex < 0) {
+            currentPlayerIndex += players.size();
+        }
+    }
+
+    public void skipNextPlayer() {
+        nextPlayer();
+        System.out.println("Next player's turn skipped.");
+    }
+
+    public void reverseDirection() {
+        direction *= -1;
+        System.out.println("Direction of play reversed.");
+    }
+
+    public int getNextPlayerIndex() {
+        int nextPlayerIndex = (currentPlayerIndex + direction) % players.size();
+        if (nextPlayerIndex < 0) {
+            nextPlayerIndex += players.size();
+        }
+        return nextPlayerIndex;
     }
 
     public List<Player> getPlayers() {
@@ -77,11 +162,11 @@ public class WorkingGame {
         this.currentPlayerIndex = currentPlayerIndex;
     }
 
-    public boolean isDirection() {
+    public int isDirection() {
         return direction;
     }
 
-    public void setDirection(boolean direction) {
+    public void setDirection(int direction) {
         this.direction = direction;
     }
 

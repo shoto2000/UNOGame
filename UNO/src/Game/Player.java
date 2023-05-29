@@ -62,8 +62,7 @@ public class Player {
 
     public boolean hasValidCardToPlay(Card currentCard) {
         for (Card card : inHand) {
-            if (card.getColor() == currentCard.getColor() || card.getValue() == currentCard.getValue()
-                    || card.isCheckWild() || card.isWildAction()) {
+            if (card.getColor() == currentCard.getColor() || card.getValue() == currentCard.getValue()) {
                 return true;
             }
         }
@@ -73,12 +72,21 @@ public class Player {
     public void applySpecialCardEffect(Card card, WorkingGame game){
         if(card.getValue()==10){
             System.out.println("Reversing the direction of play.");
-//            reverse
+            game.reverseDirection();
         }
         else if(card.getValue()==11){
             System.out.println("Next player turn have been skipped");
-//            skip
+            game.skipNextPlayer();
         }
-        else if
+        else if(card.getValue()==12){
+            int nextPlayerIndex = game.getNextPlayerIndex();
+            System.out.println("check-------------- " + nextPlayerIndex);
+            Player nextPlayer = game.getPlayers().get(nextPlayerIndex);
+            nextPlayer.drawCard(game.getDeck());
+            nextPlayer.drawCard(game.getDeck());
+
+            System.out.println(nextPlayer.getName()+" drew 2 cards from deck and skipped their turn");
+            game.skipNextPlayer();
+        }
     }
 }
