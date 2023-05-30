@@ -30,7 +30,7 @@ public class Card {
     }
 
     public boolean isSpecialActionCard(){
-        return (value==10||value==11||value==12);
+        return (value==10||value==11||value==12||color==Color.WILD||color==Color.WILD4);
     }
 
     @Override

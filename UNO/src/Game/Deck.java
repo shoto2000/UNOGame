@@ -40,11 +40,7 @@ public class Deck {
     }
 
     public void replenish(){
-        int discardPileSize = cards.size();
-        for (int i = discardPileSize - 1; i >= 0; i--) {
-            Card discardedCard = cards.remove(i);
-            cards.add(discardedCard);
-        }
+        initialize();
         shuffle();
     }
 

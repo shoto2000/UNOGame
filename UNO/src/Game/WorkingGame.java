@@ -44,75 +44,119 @@ public class WorkingGame {
     }
 
     private boolean isValidCardPlay(Card card) {
-        return card.getColor() == currentCard.getColor() || card.getValue() == currentCard.getValue();
+        return card.getColor() == currentCard.getColor() || card.getValue() == currentCard.getValue()
+                || card.getColor()==Color.WILD || card.getColor()==Color.WILD4;
     }
 
-    public void turnHandler(Player player){
-        System.out.println(player.getName()+"'s turn");
+    private boolean isValidCardPlayWild4(Card card) {
+        return card.getColor() == currentCard.getColor() || card.getValue() == currentCard.getValue()
+                || card.getColor()==Color.WILD;
+    }
+
+    public void turnHandler(Player player) {
+        System.out.println(player.getName() + player.getId()+"'s turn");
         System.out.println("\n* * * * * * * * * * * * * * * * * * * *");
-        System.out.println("Current Card: "+currentCard);
-        System.out.println("* * * * * * * * * * * * * * * * * * * *\n");
-        System.out.println(player.getName() + "'s Hand:");
-        System.out.println("* * * * * * * * * * * * * * * * * * * *");
-        for(int i=0;i<player.getInHand().size();i++){
-            String printing = "index "+i+" = "+player.getInHand().get(i);
-            String formattedText = String.format("%-" + 36 + "s", printing);
-            System.out.println("* "+formattedText+"*");
+        if(currentCard.getValue()==-2){
+            System.out.println("Current Card: " + currentCard.getColor());
+        }
+        else{
+            System.out.println("Current Card: " + currentCard);
         }
         System.out.println("* * * * * * * * * * * * * * * * * * * *\n");
-        if(!player.hasValidCardToPlay(currentCard)){
+        System.out.println(player.getName() + player.getId()+"'s Hand:");
+        System.out.println("* * * * * * * * * * * * * * * * * * * *");
+
+        for (int i = 0; i < player.getInHand().size(); i++) {
+            String printing = "index " + i + " = " + player.getInHand().get(i);
+            String formattedText = String.format("%-" + 36 + "s", printing);
+            System.out.println("* " + formattedText + "*");
+        }
+
+        System.out.println("* * * * * * * * * * * * * * * * * * * *\n");
+
+        if (!player.hasValidCardToPlay(currentCard)) {
             System.out.println("Not a valid card to play, Drawing a Card");
             player.drawCard(deck);
-            System.out.println("\nAfter Drawing Card "+player.getName()+"'s Hand:");
+
+            System.out.println("\nAfter Drawing Card " + player.getName() + player.getId()+ "'s Hand:");
             System.out.println("* * * * * * * * * * * * * * * * * * * *");
-            for(int i=0;i<player.getInHand().size();i++){
-                String printing = "index "+i+" = "+player.getInHand().get(i);
+
+            for (int i = 0; i < player.getInHand().size(); i++) {
+                String printing = "index " + i + " = " + player.getInHand().get(i);
                 String formattedText = String.format("%-" + 36 + "s", printing);
-                System.out.println("* "+formattedText+"*");
+                System.out.println("* " + formattedText + "*");
             }
+
             System.out.println("* * * * * * * * * * * * * * * * * * * *\n");
-            if(!player.hasValidCardToPlay(currentCard)){
-                System.out.println("Still no valid card to Play, turn skipped");
+
+            if (!player.hasValidCardToPlay(currentCard)) {
+                System.out.println("Still no valid card to play, turn skipped");
                 nextPlayer();
                 return;
             }
         }
 
         Scanner sc = new Scanner(System.in);
-
         int choice;
 
-        while(true){
-            System.out.println("Enter the index of the card to play between {0-"+ (player.getInHand().size()-1)+"}"+" or -1 to draw the card");
-            choice = sc.nextInt();
+        while (true) {
+            System.out.println("Enter the index of the card to play between {0-" + (player.getInHand().size() - 1) + "}" + " or -1 to draw a card");
 
-            if(choice==-1){
-                player.drawCard(deck);
-                return;
-            }
-            if(choice>=0 && choice<player.getInHand().size()){
-                Card selectedCard = player.getInHand().get(choice);
-                if(isValidCardPlay(selectedCard)){
-                    player.playCard(selectedCard,this);
-                    if(selectedCard.isSpecialActionCard()){
-                        player.applySpecialCardEffect(selectedCard,this);
-                    }
-                    if(player.getInHand().isEmpty()){
-                        System.out.println(player.getName()+" wins the game");
-                        System.exit(0);
-                    }
-                    nextPlayer();
+            if (sc.hasNextInt()) {
+                choice = sc.nextInt();
+
+                if (choice == -1) {
+                    player.drawCard(deck);
                     return;
                 }
-                else{
-                    System.out.println("invalid Card selection. Try again");
+
+                if (choice >= 0 && choice < player.getInHand().size()) {
+                    Card selectedCard = player.getInHand().get(choice);
+
+                    if (selectedCard.getColor() == Color.WILD4) {
+                        boolean hasValidCardToPlay = false;
+
+                        for (Card card : player.getInHand()) {
+                            if (isValidCardPlayWild4(card)) {
+                                hasValidCardToPlay = true;
+                                break;
+                            }
+                        }
+
+                        if (hasValidCardToPlay) {
+                            System.out.println("You cannot use Wild +4 if you have another valid card to play. Try again.");
+                            continue;
+                        }
+                    }
+
+                    if (isValidCardPlay(selectedCard)) {
+                        player.playCard(selectedCard, this);
+                        System.out.println(discarded);
+
+                        if (selectedCard.isSpecialActionCard()) {
+                            player.applySpecialCardEffect(selectedCard, this);
+                        }
+
+                        if (player.getInHand().isEmpty()) {
+                            System.out.println(player.getName() + " wins the game");
+                            System.exit(0);
+                        }
+
+                        nextPlayer();
+                        return;
+                    } else {
+                        System.out.println("Invalid card selection. Try again.");
+                    }
+                } else {
+                    System.out.println("Invalid choice. Try again.");
                 }
-            }
-            else{
-                System.out.println("Invalid Choice. Try Again");
+            } else {
+                String invalidInput = sc.next();
+                System.out.println("Invalid input: " + invalidInput + ". Try again.");
             }
         }
     }
+
 
 
     private void nextPlayer() {
