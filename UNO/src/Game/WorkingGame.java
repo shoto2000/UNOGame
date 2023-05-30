@@ -34,8 +34,6 @@ public class WorkingGame {
         deck.initialize();
         deck.shuffle();
         distributeInitialCards();
-        System.out.println("Deck has: "+deck.getCards().size()+" cards");
-        System.out.println("Deck has: "+deck.getCards());
         Card initialCard = deck.drawCard();
         discarded.add(initialCard);
         currentCard = initialCard;
@@ -131,7 +129,6 @@ public class WorkingGame {
 
                     if (isValidCardPlay(selectedCard)) {
                         player.playCard(selectedCard, this);
-                        System.out.println(discarded);
 
                         if (selectedCard.isSpecialActionCard()) {
                             player.applySpecialCardEffect(selectedCard, this);
