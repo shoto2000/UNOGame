@@ -40,7 +40,7 @@ public class WorkingGame {
         discarded.add(initialCard);
         currentCard = initialCard;
         System.out.println("Game have been Started:-");
-        System.out.println("Starting the game with: "+ initialCard.getColor()+" "+initialCard.getValue());
+        System.out.println("Starting the game with: "+ initialCard);
     }
 
     private boolean isValidCardPlay(Card card) {
@@ -49,18 +49,28 @@ public class WorkingGame {
 
     public void turnHandler(Player player){
         System.out.println(player.getName()+"'s turn");
-        System.out.println("Current Card: "+currentCard.getColor()+" "+currentCard.getValue());
-        System.out.println("Players Hand:");
+        System.out.println("\n* * * * * * * * * * * * * * * * * * * *");
+        System.out.println("Current Card: "+currentCard);
+        System.out.println("* * * * * * * * * * * * * * * * * * * *\n");
+        System.out.println(player.getName() + "'s Hand:");
+        System.out.println("* * * * * * * * * * * * * * * * * * * *");
         for(int i=0;i<player.getInHand().size();i++){
-            System.out.println("index "+i+"= "+player.getInHand().get(i));
+            String printing = "index "+i+" = "+player.getInHand().get(i);
+            String formattedText = String.format("%-" + 36 + "s", printing);
+            System.out.println("* "+formattedText+"*");
         }
+        System.out.println("* * * * * * * * * * * * * * * * * * * *\n");
         if(!player.hasValidCardToPlay(currentCard)){
             System.out.println("Not a valid card to play, Drawing a Card");
             player.drawCard(deck);
-            System.out.println("After Drawing Card Players Hand:");
+            System.out.println("\nAfter Drawing Card "+player.getName()+"'s Hand:");
+            System.out.println("* * * * * * * * * * * * * * * * * * * *");
             for(int i=0;i<player.getInHand().size();i++){
-                System.out.println("index "+i+"= "+player.getInHand().get(i));
+                String printing = "index "+i+" = "+player.getInHand().get(i);
+                String formattedText = String.format("%-" + 36 + "s", printing);
+                System.out.println("* "+formattedText+"*");
             }
+            System.out.println("* * * * * * * * * * * * * * * * * * * *\n");
             if(!player.hasValidCardToPlay(currentCard)){
                 System.out.println("Still no valid card to Play, turn skipped");
                 nextPlayer();
@@ -73,7 +83,7 @@ public class WorkingGame {
         int choice;
 
         while(true){
-            System.out.println("Enter the index of the card to play between {0-"+ (player.getInHand().size()-1)+"}"+" or -1 to draw te card");
+            System.out.println("Enter the index of the card to play between {0-"+ (player.getInHand().size()-1)+"}"+" or -1 to draw the card");
             choice = sc.nextInt();
 
             if(choice==-1){

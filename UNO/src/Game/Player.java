@@ -51,7 +51,7 @@ public class Player {
     public void drawCard(Deck deck) {
         Card card = deck.drawCard();
         inHand.add(card);
-        System.out.println(name + " have drawn a card: " + card.getColor() + " " + card.getValue());
+        System.out.println(name + " have drawn a card: ");
     }
 
     public void playCard(Card card, WorkingGame game) {

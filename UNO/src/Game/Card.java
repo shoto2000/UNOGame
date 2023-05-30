@@ -35,7 +35,11 @@ public class Card {
 
     @Override
     public String toString() {
-        return color +
-                " " + value;
+        if(value==10)return color + " REVERSE";
+        else if(value==11)return color + " SKIP";
+        else if(value==12)return color + " +2";
+        else if(color==Color.WILD && value==-1) return "WILD";
+        else if(color==Color.WILD4 && value==-1) return "WILD +4";
+        else return color + " " + value;
     }
 }

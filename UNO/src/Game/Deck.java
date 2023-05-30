@@ -22,10 +22,16 @@ public class Deck {
 
     public void initialize(){
         for(Color color:Color.values()){
+            if(color==Color.WILD || color ==Color.WILD4) continue;
             for(int i=0;i<=12;i++){
                 cards.add(new Card(color,i));
                 if(i!=0) cards.add(new Card(color,i));
             }
+        }
+
+        for(int i=0;i<4;i++){
+            cards.add(new Card(Color.WILD,-1));
+            cards.add(new Card(Color.WILD4,-1));
         }
     }
 
